@@ -184,9 +184,7 @@ graph TD
     G --> H
     H --> B
 
-    style B fill:#AEC6CF,stroke:#333,stroke-width:2px
-    style D fill:#D3D3D3,stroke:#333,stroke-width:2px
-    style E fill:#77DD77,stroke:#333,stroke-width:2px
+   
 ```
 
 ### 3.3 Actionable Design Recommendations for Swarm Orchestration
@@ -233,7 +231,7 @@ graph LR
     ChimeraAgentA -- Negotiate Task/Exchange Data --> OtherAgents[Other Agents]
     OtherAgents -- Skill/Insight/Trend Data --> ChimeraAgentA
 
-    style ChimeraAgentB fill:#90EE90,stroke:#333,stroke-width:2px
+    
 ```
 
 ## 5. Spec-Driven Development (SDD) Workflow
@@ -257,9 +255,7 @@ graph TD
     H --> I[Monitoring/Feedback/New Goals]
     I --> B
 
-    style C fill:#FFC0CB,stroke:#333,stroke-width:2px
-    style E fill:#ADD8E6,stroke:#333,stroke-width:2px
-    style F fill:#90EE90,stroke:#333,stroke-width:2px
+    
 ```
 
 ## 6. Agent Economic Capabilities
