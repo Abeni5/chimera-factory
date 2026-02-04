@@ -44,7 +44,7 @@ See `output_schema.json` for full JSON Schema definition.
 ```json
 {
   "content": {
-    "text": "🔥 Sustainable fashion is the future! Check out these eco-friendly trends taking over Ethiopia! 🌱✨ #SustainableFashion #EthiopiaFashion",
+    "text": "Sustainable fashion is the future! Check out these eco-friendly trends taking over Ethiopia!  #SustainableFashion #EthiopiaFashion",
     "image_url": "https://cdn.chimera.ai/generated/agent-123/image-456.jpg",
     "video_url": null,
     "platform": "instagram",
