@@ -70,6 +70,9 @@ This section outlines the systematic approach taken from project inception to th
           "inputs": []
         }
         ```
+    *   **Connection Issue & Task Prioritization:**
+        *   During the initial connection attempt, a `404 Not Found` error was encountered while fetching resource metadata from `https://mcppulse.10academy.org/.well-known/oauth-protected-resource`.
+        *   Due to this transient connectivity issue, the development focus was shifted to the research and documentation phase to ensure continued progress. This allowed for the completion of the architectural strategy and other key documents while the connection issue was being investigated.
 
 ### Phase 2: Research and Documentation
 
