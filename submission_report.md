@@ -177,7 +177,7 @@ graph TD
     B --> C(Task Queue - Redis)
     C --> D[Worker: Execute Task]
     D --> E{Judge: Validate Output against Specs/Rules}
-    E -- Approve (Confidence > 0.9) --> F[Action: Commit/Publish (via MCP Tools)]
+    E -- Approve (Confidence > 0.9) --> F[Action: Commit/Publish]
     E -- Reject (Confidence < 0.7) --> B
     E -- Escalate (Confidence 0.7-0.9 or Sensitive) --> G[Human-in-the-Loop Review]
     F --> H[Logging/Traceability]
