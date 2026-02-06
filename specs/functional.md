@@ -1,347 +1,67 @@
-<<<<<<< HEAD
-# Project Chimera: Functional Requirements Specification
-
-**Document Status:** Ratified  
-**Version:** 1.0.0  
-**Last Updated:** 2026-02-04  
-**Traceability:** SRS Section 4 (Specific Requirements: Functional), Task 1 Report Section 3
-
-## 1. User Stories
-
-### 1.1 Network Operator Stories
-
-**US-1.1: Campaign Goal Definition**
-- **As a** Network Operator  
-- **I want to** define high-level campaign goals in natural language  
-- **So that** the Planner Agent can decompose them into executable tasks  
-- **Acceptance Criteria:**
-  - Operator can input goals via Orchestrator Dashboard
-  - Planner generates visible task tree before execution
-  - Operator can inspect and modify task decomposition
-- **Reference:** SRS Section 6.1 (UI 1.1), Task 1 Report Section 3.1 (Planner Role)
-
-**US-1.2: Fleet Monitoring**
-- **As a** Network Operator  
-- **I want to** view real-time status of all active agents  
-- **So that** I can monitor fleet health and intervene when necessary  
-- **Acceptance Criteria:**
-  - Dashboard displays agent states (Planning, Working, Judging, Sleeping)
-  - Financial health (wallet balances) visible per agent
-  - HITL queue depth displayed
-- **Reference:** SRS Section 6.1 (UI 1.0), Task 1 Report Section 7 (HITL Governance)
-
-### 1.2 Human Reviewer Stories
-
-**US-2.1: Content Review**
-- **As a** Human Reviewer  
-- **I want to** review escalated content from Judge Agents  
-- **So that** I can approve, reject, or edit agent-generated content before publication  
-- **Acceptance Criteria:**
-  - Review interface displays content with confidence score
-  - Color-coded badges indicate attention level (Green >0.9, Yellow >0.7, Red <0.7)
-  - Approve/Reject actions update task status
-- **Reference:** SRS Section 5.1 (NFR 1.1), Task 1 Report Section 3.2 (HITL Integration)
-
-**US-2.2: Sensitive Content Handling**
-- **As a** Human Reviewer  
-- **I want to** receive mandatory reviews for sensitive topics  
-- **So that** I can ensure brand safety and regulatory compliance  
-- **Acceptance Criteria:**
-  - Sensitive topics (Politics, Health, Financial, Legal) always route to HITL
-  - Keyword and semantic classification triggers mandatory review
-- **Reference:** SRS Section 5.1 (NFR 1.2)
-
-### 1.3 Developer Stories
-
-**US-3.1: MCP Server Integration**
-- **As a** Developer  
-- **I want to** deploy new MCP Servers for external integrations  
-- **So that** agents can access new data sources and tools without code changes  
-- **Acceptance Criteria:**
-  - MCP Server registration process documented
-  - Agents automatically discover new servers via MCP Host
-  - Tools and Resources exposed to Planner/Worker agents
-- **Reference:** SRS Section 3.2.1, Task 1 Report Section 2.3 (MCP Abstraction)
-
-**US-3.2: Agent Persona Management**
-- **As a** Developer  
-- **I want to** define agent personas via SOUL.md files  
-- **So that** agents maintain consistent personality and brand voice  
-- **Acceptance Criteria:**
-  - SOUL.md schema supports backstory, voice/tone, beliefs, directives
-  - Persona changes propagate via GitOps
-  - Version control tracks persona evolution
-- **Reference:** SRS Section 4.1 (FR 1.0), Task 1 Report Section 8 (Traceability)
-
-### 1.4 Agent Stories (Internal)
-
-**US-4.1: Goal Decomposition**
-- **As a** Planner Agent  
-- **I want to** decompose high-level goals into executable tasks  
-- **So that** Worker Agents can execute them in parallel  
-- **Acceptance Criteria:**
-  - Planner generates DAG of tasks
-  - Tasks pushed to Redis TaskQueue
-  - Dynamic re-planning on state changes
-- **Reference:** SRS Section 3.1.1, Task 1 Report Section 3.1 (Planner)
-
-**US-4.2: Task Execution**
-- **As a** Worker Agent  
-- **I want to** execute atomic tasks using MCP Tools  
-- **So that** I can generate content, post to social media, or execute transactions  
-- **Acceptance Criteria:**
-  - Worker pulls task from TaskQueue
-  - Executes using available MCP Tools
-  - Submits result to ReviewQueue
-- **Reference:** SRS Section 3.1.2, Task 1 Report Section 3.1 (Worker)
-
-**US-4.3: Output Validation**
-- **As a** Judge Agent  
-- **I want to** validate Worker outputs against specs and persona constraints  
-- **So that** only safe, brand-aligned content is published  
-- **Acceptance Criteria:**
-  - Judge assigns confidence_score (0.0-1.0)
-  - Routes based on confidence thresholds
-  - Implements OCC to prevent race conditions
-- **Reference:** SRS Section 3.1.3, Task 1 Report Section 3.1 (Judge)
+# Project Chimera Functional Specification
 
-## 2. Functional Requirements
+## Overview
 
-### FR 1.0: Persona Instantiation via SOUL.md
+This document outlines the functional requirements for Project Chimera, an autonomous AI influencer network. It directly derives from the Project Chimera SRS Document.
 
-**Requirement:** The system SHALL support agent persona definition via standardized `SOUL.md` configuration files.
+## Core Functional Areas
 
-**Details:**
-- **Backstory:** Comprehensive narrative history of the agent
-- **Voice/Tone:** Stylistic guidelines (e.g., "Witty," "Empathetic," "Technical," "Gen-Z Slang")
-- **Core Beliefs & Values:** Ethical and behavioral guardrails
-- **Directives:** Hard constraints on behavior
+### 1. Autonomous Influencer Lifecycle Management
 
-**Implementation Notes:**
-- Use Pydantic for schema validation
-- Persona loaded at agent startup
-- Version-controlled for GitOps management
+**SRS Reference**: Section 3.1
+**Description**: The system shall manage the entire lifecycle of an AI influencer, from creation and persona definition to content generation, engagement, and performance analysis.
 
-**Reference:** SRS Section 4.1 (FR 1.0), Task 1 Report Section 8 (Spec Management)
+### 2. Multi-Platform Content Generation & Publishing
 
-### FR 1.1: Hierarchical Memory Retrieval
+**SRS Reference**: Section 3.2
+**Description**: The system shall generate multimodal content (text, image, video) tailored to specific AI personas and publish it across various social media platforms (e.g., Twitter, TikTok, Instagram) via the Model Context Protocol (MCP).
 
-**Requirement:** The system SHALL implement multi-tiered memory retrieval before any reasoning step.
+**Sub-functions**:
+-   **Content Planning**:
+    -   Generate content ideas based on trends, persona, and campaign goals.
+    -   Schedule content publication.
+-   **Content Creation**:
+    -   Generate text captions, tweets, blog posts.
+    -   Generate images and short videos (e.g., using RunwayML via MCP).
+-   **Content Tailoring**: Adapt content format and tone for each target platform.
 
-**Details:**
-1. **Short-Term (Episodic):** Fetch last 1 hour from Redis cache
-2. **Long-Term (Semantic):** Query Weaviate for semantically relevant memories
-3. **Context Construction:** Dynamically assemble system prompt with SOUL.md + memories
+### 3. Audience Engagement & Interaction
 
-**Implementation Notes:**
-- Memory retrieval occurs via MCP Resources (`mcp://memory/recent`, `mcp://memory/semantic`)
-- Context window management prevents overflow
-- Semantic search uses vector similarity
+**SRS Reference**: Section 3.3
+**Description**: The system shall monitor audience reactions and engage autonomously, responding to comments, direct messages, and trends to foster community growth.
 
-**Reference:** SRS Section 4.1 (FR 1.1), Task 1 Report Section 2 (Database Selection)
+**Sub-functions**:
+-   **Sentiment Analysis**: Analyze audience sentiment towards published content.
+-   **Automated Responses**: Generate and post replies to comments and messages.
+-   **Trend Identification**: Identify emerging trends relevant to the AI persona's niche.
 
-### FR 1.2: Dynamic Persona Evolution
+### 4. Performance Monitoring & Optimization
 
-**Requirement:** The system SHALL enable persona learning through successful interactions.
+**SRS Reference**: Section 3.4
+**Description**: The system shall track key performance indicators (KPIs) for each AI influencer and optimize strategies to maximize reach, engagement, and monetization.
 
-**Details:**
-- Judge Agent summarizes high-engagement interactions
-- Background process updates mutable memories collection in Weaviate
-- Effectively "writes" to agent's long-term biography
+**Sub-functions**:
+-   **KPI Tracking**: Monitor metrics like follower growth, engagement rate, reach, and conversion.
+-   **Strategy Adjustment**: Dynamically adjust content strategy based on performance data.
+-   **Reporting**: Generate performance reports for human oversight.
 
-**Reference:** SRS Section 4.1 (FR 1.2)
+### 5. Human-in-the-Loop (HITL) Oversight
 
-### FR 2.0: Active Resource Monitoring
+**SRS Reference**: Section 3.1.1, NFR 1.1
+**Description**: The system shall incorporate a Human-in-the-Loop mechanism, particularly for sensitive content or low-confidence AI decisions, allowing human operators to review and approve/reject actions.
 
-**Requirement:** The system SHALL implement continuous polling of configured MCP Resources.
+**Sub-functions**:
+-   **Review Queue Management**: Prioritize items in the HITL review queue.
+-   **Decision Escalation**: Escalate critical decisions to human operators.
+-   **Feedback Integration**: Incorporate human feedback to refine AI models and rules.
 
-**Examples:**
-- `twitter://mentions/recent` - Latest mentions of the agent
-- `news://ethiopia/fashion/trends` - RSS feeds relevant to niche
-- `market://crypto/eth/price` - Real-time financial data
+## Data Flows
 
-**Implementation Notes:**
-- Planner Agent subscribes to resource updates
-- Semantic Filter scores relevance (threshold: 0.75)
-- Only relevant content triggers task creation
+**(Placeholder for Mermaid or other diagram for data flows)**
 
-**Reference:** SRS Section 4.2 (FR 2.0), Task 1 Report Section 3.1 (Planner)
+## User Stories
 
-### FR 2.1: Semantic Filtering & Relevance Scoring
-
-**Requirement:** The system SHALL filter ingested content through a Semantic Filter before task creation.
-
-**Details:**
-- Lightweight LLM (e.g., Gemini 3 Flash) scores relevance
-- Configurable Relevance Threshold (default: 0.75)
-- Only content exceeding threshold triggers Planner task creation
-
-**Reference:** SRS Section 4.2 (FR 2.1)
-
-### FR 2.2: Trend Detection
-
-**Requirement:** The system SHALL support background Trend Spotter Worker for aggregated analysis.
-
-**Details:**
-- Analyzes News Resources over time intervals (e.g., 4 hours)
-- Detects topic clusters
-- Generates "Trend Alert" fed to Planner context
-
-**Reference:** SRS Section 4.2 (FR 2.2)
-
-### FR 3.0: Multimodal Generation via MCP Tools
-
-**Requirement:** The system SHALL utilize specialized MCP Tools for content generation.
-
-**Details:**
-- **Text:** Generated natively by Cognitive Core (Gemini 3 Pro / Claude Opus)
-- **Images:** Via `mcp-server-ideogram` or `mcp-server-midjourney`
-- **Video:** Via `mcp-server-runway` or `mcp-server-luma`
-
-**Reference:** SRS Section 4.3 (FR 3.0), Task 1 Report Section 2.3 (MCP Abstraction)
-
-### FR 3.1: Character Consistency Lock
-
-**Requirement:** The system SHALL enforce character consistency for image generation.
-
-**Details:**
-- All image generation requests MUST include `character_reference_id` or style LoRA identifier
-- Retrieves canonical facial features and style settings
-- Judge validates consistency before approval
-
-**Reference:** SRS Section 4.3 (FR 3.1), Task 1 Report Section 3.1 (Judge)
-
-### FR 3.2: Hybrid Video Rendering Strategy
-
-**Requirement:** The system SHALL implement tiered video generation to balance quality and cost.
-
-**Details:**
-- **Tier 1 (Daily):** Static Image + Motion Brush (Image-to-Video)
-- **Tier 2 (Hero):** Full Text-to-Video generation
-- Planner determines tier based on priority and budget
-
-**Reference:** SRS Section 4.3 (FR 3.2)
-
-### FR 4.0: Platform-Agnostic Publishing
-
-**Requirement:** The system SHALL execute all social media actions via MCP Tools exclusively.
-
-**Details:**
-- Direct API calls from agent core logic prohibited
-- All actions through MCP layer (e.g., `twitter.post_tweet`, `instagram.publish_media`)
-- Enforces rate limiting, logging, dry-run capabilities
-
-**Reference:** SRS Section 4.4 (FR 4.0), Task 1 Report Section 2.3 (MCP Abstraction)
-
-### FR 4.1: Bi-Directional Interaction Loop
-
-**Requirement:** The system SHALL support full interaction loop: Ingest → Plan → Generate → Act → Verify.
-
-**Details:**
-1. Planner receives comment via `twitter://mentions` Resource
-2. Planner creates "Reply Task" → Worker
-3. Worker generates context-aware reply (consulting Memory)
-4. Worker calls `twitter.reply_tweet` Tool
-5. Judge verifies safety before finalizing
-
-**Reference:** SRS Section 4.4 (FR 4.1), Task 1 Report Section 3.2 (Swarm Workflow)
-
-### FR 5.0: Non-Custodial Wallet Management
-
-**Requirement:** Each Chimera Agent SHALL possess a unique, persistent, non-custodial wallet via Coinbase AgentKit.
-
-**Details:**
-- Wallet address assigned at agent creation
-- Private key secured via enterprise secrets manager (AWS Secrets Manager, HashiCorp Vault)
-- Key injected at startup, never logged or exposed
-
-**Reference:** SRS Section 4.5 (FR 5.0), Task 1 Report Section 6 (Agent Economic Capabilities)
-
-### FR 5.1: Autonomous On-Chain Transactions
-
-**Requirement:** The system SHALL support autonomous transactions via AgentKit Action Providers.
-
-**Actions:**
-- `native_transfer`: Send ETH, USDC to external wallets
-- `deploy_token`: Deploy ERC-20 tokens (e.g., fan loyalty program)
-- `get_balance`: Check financial health before cost-incurring workflows
-
-**Reference:** SRS Section 4.5 (FR 5.1), Task 1 Report Section 6 (Economic Agency)
-
-### FR 5.2: Budget Governance (CFO Judge)
-
-**Requirement:** A specialized Judge Agent ("CFO") SHALL review every transaction request.
-
-**Details:**
-- Enforces configurable budget limits (e.g., "Max daily spend: $50 USDC")
-- Anomaly detection for suspicious patterns
-- CFO Judge REJECTS exceeding limits, flags for human review
-
-**Reference:** SRS Section 4.5 (FR 5.2), Task 1 Report Section 6 (Budget Governance)
-
-### FR 6.0: Planner-Worker-Judge Implementation
-
-**Requirement:** The system SHALL implement three-role architecture as distinct, decoupled services.
-
-**Details:**
-1. **Planner Service:** Reads GlobalState, generates tasks, pushes to TaskQueue (Redis)
-2. **Worker Pool:** Scalable stateless containers pop tasks, execute, push to ReviewQueue
-3. **Judge Service:** Polls ReviewQueue, validates outputs, commits to GlobalState or re-queues
-
-**Reference:** SRS Section 4.6 (FR 6.0), Task 1 Report Section 3.1 (Agent Roles)
-
-### FR 6.1: Optimistic Concurrency Control (OCC)
-
-**Requirement:** The Judge component SHALL implement OCC to prevent race conditions.
-
-**Details:**
-- Judge checks `state_version` timestamp/hash before commit
-- If state modified since Worker started, commit fails
-- Result invalidated, task re-queued for Planner re-evaluation
-
-**Reference:** SRS Section 4.6 (FR 6.1), Task 1 Report Section 3.3 (OCC)
-
----
-
-**Next Steps:** Proceed to `specs/technical.md` for API contracts, database schemas, and executable specifications.
-=======
-# Specs: Functional Requirements
-
-**Version:** 1.0
-**Date:** 2026-02-06
-**Status:** Draft
-
-This document translates the System Requirements Specification (SRS) into actionable user stories and functional requirements for Spec-Driven Development (SDD).
-
-## 1. User Stories
-
-### 1.1 For System Operators
-- **As a System Operator, I want to** monitor the health and performance of the agent swarm **so that** I can ensure compliance with NFRs.
-- **As a System Operator, I want to** review HITL intervention queues **so that** I can provide timely governance and resolve low-confidence tasks.
-- **As a System Operator, I want to** deploy new agent skills **so that** the network can adapt to new content trends and platforms.
-
-### 1.2 For Content Reviewers (HITL)
-- **As a Content Reviewer, I want to** receive a clear, concise summary of tasks requiring approval **so that** I can make efficient and accurate judgments.
-- **As a Content Reviewer, I want to** be able to approve, reject, or provide feedback on agent-generated content **so that** I can maintain quality and brand safety.
-
-### 1.3 For Developers
-- **As a Developer, I want to** have clear, machine-readable technical specs for all tasks **so that** I can contribute to the system with minimal ambiguity.
-- **As a Developer, I want to** use a standardized MCP for tooling **so that** I can automate development, testing, and deployment workflows.
-
-### 1.4 For Agents
-- **As a Planner Agent, I want to** decompose high-level goals into executable tasks for Worker agents **so that** I can orchestrate complex content campaigns.
-- **As a Worker Agent, I want to** receive tasks with clear input/output contracts **so that** I can execute them reliably using my available skills.
-- **As a Judge Agent, I want to** evaluate Worker output against quality, compliance, and financial metrics **so that** I can enforce the network's standards.
-
-## 2. Functional Requirements
-
-*Traceability: These requirements are derived from the SRS, Section 4.1-6.1.*
-
-- **FR1: Autonomous Content Generation.** The system must be able to generate content for social media platforms based on high-level goals.
-- **FR2: Trend Analysis.** The system must be able to identify emerging trends and topics relevant to its target audience. *(Corresponds to `trend_fetcher` skill)*
-- **FR3: Content Production.** The system must produce various content formats (e.g., text, images) tailored to specific platforms. *(Corresponds to `content_generator` skill)*
-- **FR4: Engagement Management.** The system must be able to post content and manage audience engagement (e.g., replies, comments). *(Corresponds to `engagement_manager` skill)*
-- **FR5: Performance Optimization.** The system must monitor content performance and adjust future strategies to maximize engagement and economic return.
-- **FR6: HITL Governance.** The system must route tasks to human reviewers based on pre-defined confidence score thresholds. *(Confidence < 0.7 REJECT, 0.7-0.9 ASYNC HITL, >0.9 AUTO-APPROVE)*
-- **FR7: Economic Agency.** Agents must be able to manage budgets and execute transactions via the integrated Agentic Commerce module. *(CFO Judge oversight)*
->>>>>>> aa1cfaa (feat: Add initial project structure and specifications)
+**(Placeholder for detailed user stories)**
+- As a **Campaign Manager**, I want to define campaign goals for an AI influencer, so that their content generation is aligned with marketing objectives.
+- As an **Audience Member**, I want to receive personalized and engaging content from my favorite AI influencer, so that I feel connected.
+- As a **Project Lead**, I want to review AI-generated content before publication if its confidence score is low or it pertains to sensitive topics, so that brand safety is maintained.
