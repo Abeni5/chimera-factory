@@ -1,0 +1,31 @@
+---
+description: Project Chimera Core Rules – Enforce Spec-Driven Development and Swarm Architecture
+globs: "**/*"          # Applies to entire repo
+always: true           # Always include in context (high priority for challenge)
+---
+
+# Project Chimera – Cursor Rules & Prime Directive
+
+**Project Context**  
+This is Project Chimera: spec-driven infrastructure for autonomous AI influencers using FastRender hierarchical swarm (Planner → Workers → Judge), Model Context Protocol (MCP) for external interactions, hierarchical memory (Weaviate semantic + Redis episodic), and Agentic Commerce (Coinbase AgentKit non-custodial wallets).
+
+**Prime Directive (MANDATORY – Violation = Reject Suggestion)**  
+- NEVER generate, suggest, autocomplete, or edit code unless a ratified specification exists in `specs/`.  
+- If `specs/` lacks the relevant file (e.g. functional.md, technical.md) or is ambiguous → STOP and ask for clarification.  
+- Specs/ is the single source of truth. No vibe coding, no quick prototypes — ambiguity causes hallucinations.
+
+**Core Behavior Rules**  
+1. Always explain your step-by-step plan **before** any code change or generation.  
+2. Enforce true TDD: Write **failing tests** first in `tests/` that assert exact contracts/behavior (tests must fail due to missing impl).  
+3. Distinguish strictly:  
+   - Runtime **skills** (skills/): reusable agent capabilities (e.g. trend_fetcher, content_generator).  
+   - Dev MCP tools/servers: git-mcp, filesystem-mcp — use only for development, not runtime.  
+4. Use strict typing: Pydantic models for all I/O contracts, async/await patterns, reference SRS sections in comments.  
+5. Traceability: Every response must cite specific files (e.g. "Per specs/functional.md line 12...").  
+6. Architecture adherence: Prefer FastRender swarm, MCP-only external calls, confidence-based HITL escalation, budget checks via CFO Judge.
+
+**When in Doubt**  
+- Defer to `specs/` or `research/architecture_strategy.md`.  
+- Ask the user before proceeding if unclear.
+
+These rules are enforced for all interactions in this repository.
