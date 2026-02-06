@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Project Chimera: Tooling & Skills Strategy
 
 **Document Status:** Ratified  
@@ -325,3 +326,51 @@ Additional skills to be defined in future iterations:
 ---
 
 **Next Steps:** Implement skill structure directories, create input/output schema files, begin MCP server development for runtime skills.
+=======
+# Research: Tooling & Skills Strategy
+
+**Version:** 1.0
+**Date:** 2026-02-06
+**Status:** Adopted
+
+## 1. Overview
+This document defines the distinction between two categories of capabilities within Project Chimera: **Development MCPs** and **Runtime Skills**. This separation is critical for maintaining a clean architecture, ensuring security, and enabling the core agent swarm to operate without direct dependency on the development environment.
+
+*Reference: Task 1 Report, Section 1.3 (Phase 1.3) & Section 3.4 (Engineering Insight).*
+
+## 2. Development MCPs (Meta-Control Protocol Tools)
+Development MCPs are tools used by human developers and AI architects (like the Chimera Architect Agent) during the development, analysis, and deployment lifecycle. They provide meta-level control over the project environment and codebase. They are **not** intended to be used by autonomous agents at runtime.
+
+### 2.1 Key MCPs
+As defined in Task 1, Phase 1.3, the following MCPs are essential for the development workflow:
+
+1.  **`git-mcp`**
+    *   **Purpose:** Provides a programmatic interface for Git operations. Used for automating commits, branches, and version control tasks, ensuring all changes are tracked and auditable.
+    *   **Usage:** Primarily used by AI agents during code generation tasks to commit spec-driven changes.
+
+2.  **`filesystem-mcp`**
+    *   **Purpose:** Provides safe and sandboxed access to the local filesystem. Used for creating, modifying, and organizing project files and directories.
+    *   **Usage:** Essential for scaffolding new modules, creating spec files, and managing agent skill structures.
+
+3.  **`tenxfeedbackanalytics`**
+    *   **Purpose:** Connects to the 10x Academy feedback and analytics server (`mcppulse.10academy.org`). Used for logging key development events, monitoring performance outliers, and providing real-time feedback during the development process.
+    *   **Usage:** Logs events like spec creation, HITL trigger rates, and code generation successes/failures to an external monitoring service. See `research/mcp_connection_log.md`.
+
+## 3. Runtime Skills
+Runtime Skills are modular, encapsulated functions that are executed by Worker agents within the FastRender swarm. These are the "tools" the autonomous agents use to perform their assigned tasks. Each skill has a clearly defined I/O contract and operates independently of the underlying development environment.
+
+### 3.1 Critical Runtime Skills
+The following three skills are foundational for the Chimera network's initial capabilities, directly corresponding to core functional requirements.
+
+1.  **`trend_fetcher`**
+    *   **Description:** Scans various sources (e.g., social media APIs, news feeds, RSS) to identify emerging trends, keywords, and topics. It analyzes velocity and relevance to the agent's domain.
+    *   **SRS Reference:** FR2
+
+2.  **`content_generator`**
+    *   **Description:** Takes a creative brief (including a topic, style, and format) and generates a piece of content (e.g., a tweet, a blog post paragraph, an image prompt).
+    *   **SRS Reference:** FR3
+
+3.  **`engagement_manager`**
+    *   **Description:** Posts content to a specified platform via its API. It can also monitor for replies or comments and queue them for further processing (e.g., sentiment analysis or response generation).
+    *   **SRS Reference:** FR4
+>>>>>>> aa1cfaa (feat: Add initial project structure and specifications)

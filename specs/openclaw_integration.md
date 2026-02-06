@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Project Chimera: OpenClaw Integration Specification
 
 **Document Status:** Ratified  
@@ -477,3 +478,86 @@ graph TD
 ---
 
 **Next Steps:** Implement manifest endpoint, deploy handshake protocol, integrate with Moltbook MCP server.
+=======
+# Specs: OpenClaw Integration Protocol
+
+**Version:** 1.0
+**Date:** 2026-02-06
+**Status:** Draft
+
+## 1. Overview
+This document specifies the integration plan for Project Chimera with the OpenClaw network. Adherence to this protocol ensures seamless, secure, and standardized communication with external agentic systems. Our integration strategy prioritizes discoverability, controlled negotiation, and auditable value exchange.
+
+*Traceability: This plan is based on the protocols detailed in the Task 1 Report, Section 4.2.*
+
+## 2. Manifest and Status Publication
+To ensure discoverability on the OpenClaw network, Project Chimera will continuously publish two key documents:
+
+### 2.1 Agent Manifest (`manifest.json`)
+A public-facing document detailing the capabilities of the Chimera swarm.
+
+- **Endpoint:** `https://api.chimera.factory/openclaw/manifest.json`
+- **Update Frequency:** Updated upon deployment of any new agent skill.
+- **Content:**
+    - `name`: "Project Chimera Autonomous Influencer Network"
+    - `description`: "A FastRender swarm for trend-aware content generation and social engagement."
+    - `capabilities`: An array of objects, one for each public-facing skill (e.g., `trend_fetcher`, `content_generator`). Each object will detail:
+        - `skill_name`: e.g., "content_generator"
+        - `description`: "Generates social media content from a creative brief."
+        - `input_schema`: JSON schema for the input contract.
+        - `output_schema`: JSON schema for the output contract.
+        - `pricing_model`: e.g., "per_call", "per_token".
+    - `protocols`: ["openclaw-v1", "moltbook-v1"]
+
+### 2.2 Network Status (`status.json`)
+A real-time status feed.
+
+- **Endpoint:** `https://api.chimera.factory/openclaw/status.json`
+- **Update Frequency:** Every 5 minutes.
+- **Content:**
+    - `status`: "operational", "degraded", "maintenance"
+    - `queue_depth`: Current number of tasks in the processing queue.
+    - `avg_latency_ms`: Average task completion time over the last hour.
+
+## 3. Communication Protocols
+
+*Reference: Task 1 Report, Section 4.2 (Protocols and Interaction Patterns)*
+
+All interactions with external agents will follow a four-phase process.
+
+### 3.1 Phase 1: Handshake
+- **Goal:** Establish a secure and authenticated communication channel.
+- **Process:**
+    1. External agent sends a `CONNECT` request to `https://api.chimera.factory/openclaw/connect`.
+    2. Chimera's gateway validates the agent's credentials (e.g., API key, signed certificate).
+    3. Chimera responds with a session token and its public key.
+    4. All subsequent communication is encrypted using the established session keys.
+
+### 3.2 Phase 2: Negotiation
+- **Goal:** Agree on the terms of the task (scope, price, deliverables).
+- **Process:**
+    1. External agent submits a `PROPOSAL` including `skill_name` and `input_data`.
+    2. Chimera's Planner agent analyzes the proposal.
+    3. The Planner, in conjunction with the CFO Judge, formulates a `COUNTER_PROPOSAL` which includes:
+        - `task_id`
+        - `price` (denominated in a stablecoin, e.g., USDC)
+        - `estimated_delivery_time`
+        - `acceptance_deadline`
+    4. The external agent sends an `ACCEPT` message, including a transaction hash for placing the agreed price in escrow.
+
+### 3.3 Phase 3: Exchange
+- **Goal:** Execute the task and deliver the result.
+- **Process:**
+    1. Upon escrow confirmation, the Planner assigns the task to a Worker agent.
+    2. The task proceeds through the standard FastRender (Worker -> Judge) workflow.
+    3. The Judge's final, approved `output_data` is watermarked and stored.
+    4. Chimera sends a `DELIVERY` message to the external agent, containing a link to the watermarked output.
+    5. The external agent confirms receipt and signs the escrow release transaction.
+
+### 3.4 Phase 4: Safety & Finalization
+- **Goal:** Handle disputes and finalize the transaction.
+- **Process:**
+    1. Upon receipt of the final payment, Chimera sends the `FINAL_DELIVERY` containing the un-watermarked output.
+    2. **Dispute Resolution:** If the external agent disputes the output, a `DISPUTE` flag is raised. The case is automatically forwarded to the HITL review queue. A human reviewer makes the final judgment on escrow release.
+    3. The transaction, outcome, and all associated data are logged immutably in the Postgres `transactions` and `tasks` tables for audit purposes.
+>>>>>>> aa1cfaa (feat: Add initial project structure and specifications)

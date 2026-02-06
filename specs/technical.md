@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Project Chimera: Technical Specification
 
 **Document Status:** Ratified  
@@ -10,10 +11,29 @@
 ### 1.1 Agent Task Schema
 
 **Reference:** SRS Section 6.2 (Schema 1), Task 1 Report Section 3.1 (Planner-Worker-Judge)
+=======
+# Specs: Technical Specifications
+
+**Version:** 1.0
+**Date:** 2026-02-06
+**Status:** Draft
+
+This document provides the executable technical specifications for Project Chimera's core components, including API contracts and database schemas.
+
+## 1. API Contracts (JSON Schema)
+
+*Traceability: Based on SRS Section 6.2, Schemas 1 & 2.*
+
+These schemas define the data interchange format for the FastRender Swarm and MCP tools.
+
+### 1.1 Task Schema (SRS Schema 1)
+This schema defines the structure of a task passed between Planner, Worker, and Judge agents.
+>>>>>>> aa1cfaa (feat: Add initial project structure and specifications)
 
 ```json
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+<<<<<<< HEAD
   "title": "AgentTask",
   "type": "object",
   "required": ["task_id", "task_type", "priority", "context", "created_at", "status"],
@@ -148,10 +168,63 @@
 ### 1.3 MCP Tool Definition Schema
 
 **Reference:** SRS Section 6.2 (Schema 2), SRS Section 3.2.2 (Protocol Primitives)
+=======
+  "title": "Chimera Task",
+  "description": "A single, executable task within the FastRender Swarm.",
+  "type": "object",
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "goal": {
+      "description": "High-level objective from the Planner.",
+      "type": "string"
+    },
+    "skill": {
+      "description": "The specific skill required to execute the task.",
+      "type": "string"
+    },
+    "input_data": {
+      "type": "object"
+    },
+    "output_data": {
+      "type": "object"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "in_progress", "awaiting_review", "completed", "failed"]
+    },
+    "confidence_score": {
+      "description": "Judge's confidence in the output quality (0.0 to 1.0).",
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "hitl_status": {
+      "type": "string",
+      "enum": ["none", "pending_async", "rejected"]
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      }
+    }
+  },
+  "required": ["task_id", "goal", "skill", "status"]
+}
+```
+
+### 1.2 MCP Tool Schema (SRS Schema 2)
+This schema defines the structure for invoking an MCP tool, such as `tenxfeedbackanalytics`.
+>>>>>>> aa1cfaa (feat: Add initial project structure and specifications)
 
 ```json
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+<<<<<<< HEAD
   "title": "MCPToolDefinition",
   "type": "object",
   "required": ["name", "description", "inputSchema"],
@@ -231,11 +304,31 @@
     },
     "required": ["platform", "text_content"]
   }
+=======
+  "title": "MCP Tool Call",
+  "description": "A request to invoke an MCP tool.",
+  "type": "object",
+  "properties": {
+    "tool_name": {
+      "type": "string",
+      "enum": ["git-mcp", "filesystem-mcp", "tenxfeedbackanalytics"]
+    },
+    "parameters": {
+      "type": "object"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": ["tool_name", "parameters", "timestamp"]
+>>>>>>> aa1cfaa (feat: Add initial project structure and specifications)
 }
 ```
 
 ## 2. Database Schema
 
+<<<<<<< HEAD
 ### 2.1 PostgreSQL Schema (Transactional Data)
 
 **Reference:** SRS Section 2.3, Task 1 Report Section 2 (Database Selection)
@@ -564,3 +657,77 @@ wallet_address: "0x..."  # Coinbase AgentKit address
 ---
 
 **Next Steps:** Proceed to `specs/openclaw_integration.md` for agent social network protocols and external integration specifications.
+=======
+*Traceability: Based on SRS Section 2.3 and Task 1 Report Section 3.2.*
+
+The Chimera data layer uses a hybrid model: Postgres for transactional and relational data, and Weaviate for semantic search on agent memories.
+
+### 2.1 Weaviate Schema (Conceptual Classes)
+- **`AgentMemory` Class:** Stores semantic information, agent experiences, and learned knowledge.
+  - `agent_id`: Cross-reference to Postgres `agents` table.
+  - `content`: Text chunk for vectorization.
+  - `source_task_id`: The task that generated this memory.
+  - `timestamp`: Time of memory creation.
+- **`ContentPiece` Class:** Stores generated content for semantic similarity searches.
+  - `content_id`: Cross-reference to Postgres `content` table.
+  - `vector`: The embedding of the content.
+  - `metadata`: Platform, author agent, etc.
+
+### 2.2 Postgres Schema (Relational ERD)
+This Mermaid ERD describes the relational schema for managing tasks, agents, transactions, and HITL review processes.
+
+```mermaid
+erDiagram
+    agents {
+        UUID agent_id PK
+        VARCHAR soul_md_path
+        VARCHAR role "Planner, Worker, Judge"
+        TIMESTAMP created_at
+    }
+
+    tasks {
+        UUID task_id PK
+        TEXT goal
+        VARCHAR skill
+        JSONB input_data
+        JSONB output_data
+        VARCHAR status
+        FLOAT confidence_score
+        VARCHAR hitl_status
+        TIMESTAMP created_at
+        UUID assigned_to_agent_id FK
+    }
+
+    content {
+        UUID content_id PK
+        TEXT body
+        VARCHAR format
+        VARCHAR platform
+        UUID created_by_task_id FK
+        TIMESTAMP posted_at
+    }
+
+    transactions {
+        UUID transaction_id PK
+        UUID agent_id FK
+        FLOAT amount
+        VARCHAR type "credit, debit"
+        TEXT description
+        TIMESTAMP executed_at
+    }
+
+    hitl_reviews {
+        UUID review_id PK
+        UUID task_id FK
+        VARCHAR status "pending, approved, rejected"
+        TEXT reviewer_feedback
+        TIMESTAMP reviewed_at
+    }
+
+    agents ||--o{ tasks : "assigns"
+    tasks ||--|{ content : "creates"
+    tasks ||--o{ hitl_reviews : "requires"
+    agents ||--o{ transactions : "performs"
+
+```
+>>>>>>> aa1cfaa (feat: Add initial project structure and specifications)

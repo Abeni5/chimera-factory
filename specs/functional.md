@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Project Chimera: Functional Requirements Specification
 
 **Document Status:** Ratified  
@@ -303,3 +304,44 @@
 ---
 
 **Next Steps:** Proceed to `specs/technical.md` for API contracts, database schemas, and executable specifications.
+=======
+# Specs: Functional Requirements
+
+**Version:** 1.0
+**Date:** 2026-02-06
+**Status:** Draft
+
+This document translates the System Requirements Specification (SRS) into actionable user stories and functional requirements for Spec-Driven Development (SDD).
+
+## 1. User Stories
+
+### 1.1 For System Operators
+- **As a System Operator, I want to** monitor the health and performance of the agent swarm **so that** I can ensure compliance with NFRs.
+- **As a System Operator, I want to** review HITL intervention queues **so that** I can provide timely governance and resolve low-confidence tasks.
+- **As a System Operator, I want to** deploy new agent skills **so that** the network can adapt to new content trends and platforms.
+
+### 1.2 For Content Reviewers (HITL)
+- **As a Content Reviewer, I want to** receive a clear, concise summary of tasks requiring approval **so that** I can make efficient and accurate judgments.
+- **As a Content Reviewer, I want to** be able to approve, reject, or provide feedback on agent-generated content **so that** I can maintain quality and brand safety.
+
+### 1.3 For Developers
+- **As a Developer, I want to** have clear, machine-readable technical specs for all tasks **so that** I can contribute to the system with minimal ambiguity.
+- **As a Developer, I want to** use a standardized MCP for tooling **so that** I can automate development, testing, and deployment workflows.
+
+### 1.4 For Agents
+- **As a Planner Agent, I want to** decompose high-level goals into executable tasks for Worker agents **so that** I can orchestrate complex content campaigns.
+- **As a Worker Agent, I want to** receive tasks with clear input/output contracts **so that** I can execute them reliably using my available skills.
+- **As a Judge Agent, I want to** evaluate Worker output against quality, compliance, and financial metrics **so that** I can enforce the network's standards.
+
+## 2. Functional Requirements
+
+*Traceability: These requirements are derived from the SRS, Section 4.1-6.1.*
+
+- **FR1: Autonomous Content Generation.** The system must be able to generate content for social media platforms based on high-level goals.
+- **FR2: Trend Analysis.** The system must be able to identify emerging trends and topics relevant to its target audience. *(Corresponds to `trend_fetcher` skill)*
+- **FR3: Content Production.** The system must produce various content formats (e.g., text, images) tailored to specific platforms. *(Corresponds to `content_generator` skill)*
+- **FR4: Engagement Management.** The system must be able to post content and manage audience engagement (e.g., replies, comments). *(Corresponds to `engagement_manager` skill)*
+- **FR5: Performance Optimization.** The system must monitor content performance and adjust future strategies to maximize engagement and economic return.
+- **FR6: HITL Governance.** The system must route tasks to human reviewers based on pre-defined confidence score thresholds. *(Confidence < 0.7 REJECT, 0.7-0.9 ASYNC HITL, >0.9 AUTO-APPROVE)*
+- **FR7: Economic Agency.** Agents must be able to manage budgets and execute transactions via the integrated Agentic Commerce module. *(CFO Judge oversight)*
+>>>>>>> aa1cfaa (feat: Add initial project structure and specifications)

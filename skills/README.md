@@ -231,6 +231,7 @@ graph LR
 
 ### 3. MCP Integration
 
+
 - Skills SHALL use MCP Tools/Resources exclusively for external interactions
 - Never make direct API calls from skill implementation
 - Document all MCP dependencies

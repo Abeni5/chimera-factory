@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Project Chimera: Master Specification Meta-Document
 
 **Document Status:** Ratified  
@@ -160,3 +161,40 @@ The Chimera infrastructure SHALL be considered successful when:
 ---
 
 **Next Steps:** Proceed to `specs/functional.md` for user stories and functional requirements, then `specs/technical.md` for API contracts and database schemas.
+=======
+# Specs: Meta Directives
+
+**Version:** 1.0
+**Date:** 2026-02-06
+**Status:** Draft
+
+## 1. High-Level Vision
+This document outlines the core architectural and operational directives for Project Chimera, an autonomous influencer network designed for scalable, ethical, and economically viable digital content creation. Our vision is to create a self-sustaining ecosystem of AI agents capable of generating high-quality, engaging content while adhering to strict governance and performance protocols.
+
+*Reference: Task 1 Report, Section 1.0 (Introduction)*
+
+## 2. Core Architectural Principles
+The architecture is founded on the principles of modularity, scalability, and auditable autonomy, as defined in the Task 1 report.
+
+1.  **Spec-Driven Development (SDD):** All components, from agent skills to infrastructure, are derived from formal specifications. Code generation is prohibited without a corresponding, approved spec.
+2.  **Swarm Intelligence:** The system leverages a Planner-Worker-Judge swarm model (FastRender) for robust task execution and quality control.
+3.  **Hierarchical Memory:** Agents utilize a multi-layered memory system (Weaviate, Redis, Postgres) to enable complex reasoning and personalization.
+4.  **HITL Governance:** Human-in-the-Loop oversight is integrated at critical decision points, with automated approvals governed by confidence scores.
+5.  **Agentic Commerce:** Agents possess economic agency, enabling them to transact and optimize for financial goals within the network, using technologies like Coinbase AgentKit.
+6.  **Interoperability:** The system adheres to OpenClaw and MoltBook protocols for seamless integration with external agentic ecosystems.
+
+*Reference: Task 1 Report, Section 3.4 (Architecture Strategy)*
+
+## 3. Constraints & Boundaries
+- **Technology Stack:** Adherence to the prescribed stack (Python, FastAPI, Weaviate, Redis, Postgres, Docker) is mandatory unless a formal change request is approved.
+- **Performance:** Non-functional requirements for latency, throughput, and availability (NFR1-NFR3) are paramount.
+- **Security:** All agent actions and data flows must comply with the defined security protocols, including HITL oversight for sensitive operations.
+- **Economic Model:** The CFO Judge agent's financial oversight is final. All transactions are logged and auditable via the Postgres database.
+
+## 4. Prime Directives for AI Agents
+1.  **Traceability:** Every action must be traceable to a specific task, user story, and specification.
+2.  **Compliance:** Adhere strictly to the defined swarm roles (Planner, Worker, Judge) and communication protocols.
+3.  **Quality:** Strive to maximize content quality and engagement metrics, subject to the Judge's final review.
+4.  **Ethical Operation:** Operate within the ethical boundaries defined in the agent's `SOUL.md` persona.
+5.  **Economic Prudence:** Manage resources and execute tasks to optimize for long-term economic viability as determined by the CFO Judge.
+>>>>>>> aa1cfaa (feat: Add initial project structure and specifications)
