@@ -69,5 +69,9 @@ Therefore, when you run `make test`, you should expect to see **failing tests**.
 ## CI/CD Pipeline
 
 This repository is equipped with a GitHub Actions workflow defined in `.github/workflows/main.yml`. This pipeline automatically runs the `make test` command on every push and pull request to the `main` branch, ensuring that all changes are continuously validated against the test suite.
+## for more short video 
+```bash
+(https://www.youtube.com/watch?v=7_elo03jjq4)
+```
 
 ---
